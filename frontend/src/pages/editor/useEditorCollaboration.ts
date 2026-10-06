@@ -6,6 +6,7 @@ import type { UserIdentity } from "../../utils/identity";
 import { filesNeedRehydration, rehydrateFilesFromUrls } from "../../utils/rehydrateFiles";
 import { buildRemoteSceneUpdate } from "./shared";
 import { attachCanvasZoomForwarding } from "./canvasZoomForwarding";
+import { attachPenBarrelEraser } from "./penBarrelEraser";
 
 interface Peer extends UserIdentity {
   isActive: boolean;
@@ -296,8 +297,13 @@ export const useEditorCollaboration = ({
     const detachCanvasZoom = attachCanvasZoomForwarding(
       editorContainerRef.current,
     );
+    const detachPenBarrelEraser = attachPenBarrelEraser(
+      editorContainerRef.current,
+      () => excalidrawAPI.current,
+    );
     return () => {
       detachCanvasZoom();
+      detachPenBarrelEraser();
       window.removeEventListener("focus", onFocus);
       window.removeEventListener("blur", onBlur);
       document.removeEventListener("mouseenter", onMouseEnter);
